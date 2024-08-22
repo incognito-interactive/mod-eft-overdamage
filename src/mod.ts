@@ -1,14 +1,20 @@
 import { IPostDBLoadMod } from "@spt/models/external/IPostDBLoadMod";
 import { DatabaseServer } from "@spt/servers/DatabaseServer";
 import { DependencyContainer } from "tsyringe";
+import { ILogger } from "@spt/models/spt/utils/ILogger";
 
+
+// Imports the stuff from the config file.
 import {
     enabled,
     logBalancingWarnings,
-    multiplier
+    multiplierHands,
+    multiplierLegs,
+    multiplierStomach
 } from "../config/config.json";
-import { ILogger } from "@spt/models/spt/utils/ILogger";
 
+
+// Mod stuff here.
 class Overdamage implements IPostDBLoadMod {
     public postDBLoad(container: DependencyContainer): void {
         // Return if the mod is disabled.
@@ -17,8 +23,11 @@ class Overdamage implements IPostDBLoadMod {
         // Get the logger.
         const logger = container.resolve<ILogger>("WinstonLogger");
 
-        // If warning is enabled and the multiplier is set incredibly high or too low then log a warning.
-        if (logBalancingWarnings && multiplier < 1 || multiplier > 10) logger.warning("Overdamage: The recommended multiplier range is between '1.5' to '3.0'!")
+        // Calculate the average multiplier which the user has set.
+        const averageMultiplier = (multiplierHands + multiplierLegs + multiplierStomach) / 3;
+
+        // Log a balancing warning if the average multiplier is very high or very low.
+        if (logBalancingWarnings && averageMultiplier < 0.1 || averageMultiplier > 10) logger.warning("Overdamage: The recommended multiplier range is between '1.5' and '3.0'!");
 
         // Get the Database Server.
         const databaseServer = container.resolve<DatabaseServer>("DatabaseServer");
@@ -28,10 +37,12 @@ class Overdamage implements IPostDBLoadMod {
 
         // Multiply all the overdamage values.
         // That is literally all this mod does, we're done.
-        globals.LegsOverdamage *= multiplier;
-        globals.HandsOverdamage *= multiplier;
-        globals.StomachOverdamage *= multiplier;
+        globals.HandsOverdamage *= multiplierHands;
+        globals.LegsOverdamage *= multiplierLegs;
+        globals.StomachOverdamage *= multiplierStomach;
     }
 }
 
+
+// Export the mod.
 export const mod = new Overdamage();

@@ -1,5 +1,7 @@
 {
     "enabled": true,
     "logBalancingWarnings": true,
-    "multiplier": 2
+    "multiplierHands": 2,
+    "multiplierLegs": 2,
+    "multiplierStomach": 2
 }
