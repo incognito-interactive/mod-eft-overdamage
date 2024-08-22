@@ -1,0 +1,10 @@
+# Ignore all the VSCode generated files.
+/*
+
+# Allow the source and config directories plus the package file.
+!/src/
+!/config/
+!/package.json
+
+# Also allow the gitignore obviously.
+!/.gitignore
