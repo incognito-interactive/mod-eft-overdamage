@@ -1,3 +1,5 @@
 {
+    "enabled": true,
+    "logBalancingWarnings": true,
     "multiplier": 2
 }
